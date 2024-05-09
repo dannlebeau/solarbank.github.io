@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Metadatos-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Dann LeBeau">
+    <meta name="description" content="Banco Solar">
+    <meta name="keywords" content="banco, transferencias, usuarios, tecnología, co-work">
     <title>Solar Bank</title>
     <link
       rel="stylesheet"
@@ -278,7 +283,7 @@
                   ><button class="btn btn-danger" onclick="eliminarUsuario('${c.id}')">Eliminar</button>
                 </td>
               </tr>
-         `);
+        `);
 
       $("#emisor").append(`<option value="${c.nombre}">${c.nombre}</option>`);
       $("#receptor").append(`<option value="${c.nombre}">${c.nombre}</option>`);
@@ -298,13 +303,13 @@
 
     data.forEach((t) => {
       $(".transferencias").append(`
-       <tr>
-         <td> ${formatDate(t[4])} </td>
-         <td> ${t[1]} </td>
-         <td> ${t[2]} </td>
-         <td> ${t[3]} </td>
-       </tr>
-     `);
+      <tr>
+        <td> ${formatDate(t[4])} </td>
+        <td> ${t[1]} </td>
+        <td> ${t[2]} </td>
+        <td> ${t[3]} </td>
+      </tr>
+    `);
     });
   };
 
