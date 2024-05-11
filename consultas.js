@@ -1,13 +1,27 @@
 const { Pool } = require('pg');
 
-const pool = new Pool({
+const config = {
   user: 'postgres',
   host: 'localhost',
   database: 'bancosolar',
   password: '3022',
   port: 5432,
-});
+};
+const pool = new Pool(config);
 
+//Insertar Usuario
+const insertarUsuario = async (datos) => {
+  // nombre, balance
+  const consulta = {
+      text: 'INSERT INTO usuarios (nombre, balance) VALUES ($1, $2) RETURNING *',
+      values: [datos.nombre, datos.balance],
+  };
+  const result = await pool.query(consulta);
+  console.log(result);
+  return result;
+};
+
+//Consultar Usuario
 const consultarUsuarios = async () => {
   const client = await pool.connect();
   try {
@@ -18,33 +32,39 @@ const consultarUsuarios = async () => {
   }
 };
 
-const agregarUsuario = async (usuario) => {
-  const client = await pool.connect();
-  try {
-    const result = await client.query('INSERT INTO usuarios (nombre, balance) VALUES ($1, $2) RETURNING *', [usuario.nombre, usuario.balance]);
-    return result.rows[0];
-  } finally {
-    client.release();
-  }
-};
-
-const actualizarUsuario = async (usuario) => {
-  const client = await pool.connect();
-  try {
+//Actualizar Usuario
+//const actualizarUsuario = async (usuario) => {
+//const actualizarUsuario = async (id, datos) => {
+//  const client = await pool.connect();
+//  try {
     //3 lineas nuevas
     // Validar que usuario.balance sea un número
-    const balance = parseFloat(usuario.balance);
-    if (isNaN(balance)) {
-      throw new Error('El valor de balance no es un número válido');
-    }
+    //const balance = parseFloat(usuario.balance);
+//    if (isNaN(balance)) {
+//      throw new Error('El valor de balance no es un número válido');
+//    }
+//    const result = await client.query('UPDATE usuarios SET nombre = $1, balance = $2 WHERE id = $3 RETURNING *', [usuario.nombre, usuario.balance, usuario.id]);
+    //const result = await client.query('UPDATE usuarios SET nombre = $1, balance = $2 WHERE id = ${id}', [usuario.nombre, usuario.balance, usuario.id]);
+//    return result.rows[0];
+//  } finally {
+//    client.release();
+//  }
+//};
 
-    const result = await client.query('UPDATE usuarios SET nombre = $1, balance = $2 WHERE id = $3 RETURNING *', [usuario.nombre, usuario.balance, usuario.id]);
-    return result.rows[0];
-  } finally {
-    client.release();
+//Opcion 2
+const actualizarUsuario = async (id, datos) => {
+  //id
+  //name, balance
+  const consulta = {
+      text: `UPDATE usuarios SET nombre = $1, balance =$2 WHERE id = '${id}'`,
+      values: datos,
   }
+  const result = await pool.query(consulta);
+  return result;
 };
 
+
+//Eliminar Usuario
 const eliminarUsuario = async (id) => {
   const client = await pool.connect();
   try {
@@ -82,7 +102,7 @@ const consultarTransferencias = async () => {
 
 module.exports = {
   consultarUsuarios,
-  agregarUsuario,
+  insertarUsuario,
   actualizarUsuario,
   eliminarUsuario,
   realizarTransferencia,
